@@ -9,498 +9,32 @@
 #include <fstream>
 #include <cstdio>
 #include <ctime>
+
+#include "CustomString.h"
+#include "CustomString.cpp"
+
 using namespace std;
 using namespace filesystem;
 
 
 
-//Our Custom String Class -------------------------------------------
-class CustomString
-{
+//template <typename T>
 
-    char* data = NULL;
-    int size = 0;
-
-public:
-
-    CustomString() {}
-
-    CustomString(int s)
-    {
-        size = s;
-        data = new char[size + 1] {'\0'};
-    }
-
-    CustomString(const string s)
-    {
-        size = s.size();
-        if (data != NULL)
-            delete data;
-        data = new char[size + 1] {'\0'};
-        for (int i = 0; i < size; i += 1)
-        {
-            data[i] = s.at(i);
-        }
-    }
-
-    CustomString(char s)
-    {
-        size = 1;
-        data = new char[2] {'\0'};
-        data[0] = s;
-    }
-
-    CustomString(CustomString& str) {
-        size = str.size;
-        data = new char[size];
-        for (int i = 0; i < size; i++) {
-            data[i] = str.data[i];
-        }
-    }
-
-    void setSize(int s)
-    {
-        size = s;
-        if (data != NULL)
-            delete data;
-        data = new char[size + 1] {'\0'};
-    }
-
-    void setString(const string s)
-    {
-        size = s.size();
-        if (data != NULL)
-            delete data;
-        data = new char[size + 1] {'\0'};
-        for (int i = 0; i < size; i += 1)
-        {
-            data[i] = s.at(i);
-        }
-    }
-
-    void setString(CustomString s)
-    {
-        size = s.size;
-        if (data != NULL)
-            delete data;
-        data = new char[size + 1] {'\0'};
-        for (int i = 0; i < size; i += 1)
-        {
-            data[i] = s.data[i];
-        }
-    }
-
-    void setString(char* s)
-    {
-        size = 0;
-        while (s[size] != '\0')
-        {
-            size += 1;
-        }
-
-        if (data != NULL)
-            delete data;
-        data = new char[size + 1] {'\0'};
-        for (int i = 0; i < size; i += 1)
-        {
-            data[i] = s[i];
-        }
-    }
-
-    void setString(char s)
-    {
-        size = 1;
-
-        if (data != NULL)
-            delete data;
-        data = new char[2] {'\0'};
-        data[0] = s;
-    }
-
-    char CustomGetAt(int s)
-    {
-        if (s < size)
-        {
-            return data[s];
-        }
-        cout << "\tError! Index " << s << " out of range.\n";
-        return '\0';
-    }
-
-    void CustomSetAt(int s, char c)
-    {
-        if (s < size)
-            data[s] = c;
-        else cout << "\tError! Index " << s << " out of range.\n";
-    }
-
-    char* get_String()
-    {
-        return data;
-    }
-
-    int getSize()
-    {
-        return size;
-    }
-
-    void print()
-    {
-        for (int i = 0; i < size; i += 1)
-        {
-            cout << data[i];
-        }
-    }
-
-    bool operator == (CustomString s)
-    {
-        if (size != s.getSize())return false;
-        for (int i = 0; i < size; i += 1)
-        {
-            if (data[i] != s.data[i])return false;
-        }
-        return true;
-    }
-
-    bool operator == (string s)
-    {
-        if (size != s.size())return false;
-        for (int i = 0; i < size; i += 1)
-        {
-            if (data[i] != s.at(i))return false;
-        }
-        return true;
-    }
-
-    bool operator != (CustomString s)
-    {
-        if (size != s.getSize())return true;
-        for (int i = 0; i < size; i += 1)
-        {
-            if (data[i] != s.data[i])return true;
-        }
-        return false;
-    }
-
-    bool operator != (string s)
-    {
-        if (size != s.size())return true;
-        for (int i = 0; i < size; i += 1)
-        {
-            if (data[i] != s.at(i))return true;
-        }
-        return false;
-    }
-
-    void operator = (string s)
-    {
-        size = s.size();
-        if (data != NULL)
-            delete data;
-        data = new char[size + 1] {'\0'};
-        for (int i = 0; i < size; i += 1)
-        {
-            data[i] = s.at(i);
-        }
-    }
-
-    void operator = (CustomString s)
-    {
-        size = s.size;
-        if (data != NULL)
-            delete data;
-        data = new char[size + 1] {'\0'};
-        for (int i = 0; i < size; i += 1)
-        {
-            data[i] = s.data[i];
-        }
-    }
-
-    void operator = (char* s)
-    {
-        size = 0;
-        while (s[size] != '\0')
-        {
-            size += 1;
-        }
-
-        if (data != NULL)
-            delete data;
-        data = new char[size + 1] {'\0'};
-        for (int i = 0; i < size; i += 1)
-        {
-            data[i] = s[i];
-        }
-    }
-
-    bool operator > (CustomString s)
-    {
-        int standard = 0;
-        this->size > s.getSize() ? standard = s.getSize() : standard = this->size;
-
-        for (int i = 0; i < standard; i += 1)
-        {
-            if (this->CustomGetAt(i) > s.CustomGetAt(i))
-            {
-                return true;
-            }
-
-            else if (this->CustomGetAt(i) < s.CustomGetAt(i))
-            {
-                return false;
-            }
-        }
-        if (this->size > s.getSize())
-            return true;
-
-        return false;
-    }
-
-    bool operator < (CustomString s)
-    {
-        if (*this == s)return 0;
-        return !(*this > s);
-    }
-
-    bool operator <= (CustomString s)
-    {
-        return ((*this < s) || (*this == s));
-    }
-
-    bool operator >= (CustomString s)
-    {
-        return ((*this > s) || (*this == s));
-    }
-
-    CustomString operator+(const char& str) {
-        if (data == NULL) size = 0;//for safity; if given string is null it will make it size 0 so that new size is calculated correctly
-        int newSize;
-        newSize = size + 1; //calculating new size
-        char* newString = new char[newSize];//making new memory of new size
-        //coping the previous string into newString --
-        for (int i = 0; i < size; i++) {
-            newString[i] = data[i];
-        }
-        // -------------------------------------------
-        //adding the new str data into newString -----
-        newString[size] = str;
-        //--------------------------------------------
-        if (data != NULL) delete[] data; //deleting the previous data
-        data = newString; //pointing string to new data
-        newString = NULL; //making new data null to avoid any danglling pointer
-        size = newSize; // sizving the new size
-        return *this;
-    }
-
-    CustomString operator+(const char* str) {
-        if (data == NULL) size = 1; //for stafity; if given data is null it will make it size 1 so that new size is calculated correctly
-        if (*str == '\0') return *this; //for stafity; if given data is null it will not add any thing
-        //calculating size of str ------------------
-        int sizeOfStr = 0;
-        while (1) {
-            if (str[sizeOfStr] == '\0') break;
-            else sizeOfStr++;
-        }
-        sizeOfStr++;
-        //--------------------------------------------
-        int newSize;
-        newSize = size + sizeOfStr - 1; //calculating new size
-        char* newdata = new char[newSize]; //making new memory of new size
-        //coping the previous data into newdata --
-        for (int i = 0; i < size - 1; i++) {
-            newdata[i] = data[i];
-        }
-        // -------------------------------------------
-        //adding the new str data into newdata -----
-        for (int i = 0; i < sizeOfStr; i++) {
-            newdata[size - 1 + i] = str[i];
-        }
-        //--------------------------------------------
-        if (data != NULL) delete[] data; //deleting the previous data
-        data = newdata; //pointing data to new data
-        newdata = NULL; //making new data null to avoid any danglling pointer
-        size = newSize; // sizving the new size
-        return *this;
-    }
-
-    const char operator[](int i) const {
-        if ((i > 0 ? i : -i) >= size) return 0;//checking if the integer is valid for cstring
-        if (i >= 0) return data[i]; //if integer is positive it will directly return the index
-        else return data[size + i - 1]; //if integer is negaitive it will return the index from end of csting
-    }
-
-    void clear() {
-        delete[] data;
-        data = nullptr;
-        size = 0;
-    }
-
-    friend fstream& operator<<(fstream& output, CustomString& str);
-
-    ~CustomString() {
-        if (data) delete[] data;
-    }
-
-    void changetoComa() {
-        for (int i = 0; i < size; i++) {
-            if (data[i] == '\0') data[i] = ',';
-        }
-    }
-};
-//-------------------------------------------------------------------
-
-//Few fstream and istream OverLoading -------------------------------
-istream& operator>>(istream& input, CustomString& s) {
-
-    char* bufferEmpty = new char[1000] {'-'};
-    input >> bufferEmpty;
-    s.setString(bufferEmpty);
-    return input;
-}
-
-fstream& operator<<(fstream& output, CustomString& str) {
-
-    if (str.getSize() == 0) return output; //checking if str is null meaning it does not contain any vaue then it will return output without doing anything
-    //this function will first calculate size of strung in str the it will copy each char element present in string of str to stt and then it will save it in output
-    //const int size = str.getSize();// +1;
-    //char* stt = new char[size];
-    //for (int i = 0; i < size - 1; i++) {
-    //	stt[i] = str[i];
-    //}
-    //stt[size - 1] = '\0';
-
-    output.write(str.data, str.size);
-    return output;
-
-    //output << s.get_String();
-}
-
-fstream& operator>>(fstream& input, CustomString& str) {
-    str.clear();
-    char temp;
-    temp = input.get(); //taking each character 
-    //int i = 0;
-    while (1) {
-        //cout << i++ << endl;
-        if (temp == '\n' || temp == '\0') { //if end of string is reached loop will be breaked
-            break;
-        }
-        if (temp == '\r') { // Skip carriage return (Windows-style line endings)
-            break;
-        }
-        else str + temp; //adding character to str
-        temp = input.get(); //saving character from input to temporary variable
-    }
-    return input;
-
-}
-//-------------------------------------------------------------------
-
-//Few Custom String Concatination Functions -------------------------
-void concatenate(CustomString& s1, CustomString s2)
-{
-    CustomString str_ret(s1.getSize() + s2.getSize());
-
-    for (int i = 0; i < s1.getSize(); i += 1)
-    {
-        str_ret.CustomSetAt(i, s1.CustomGetAt(i));
-    }
-
-    for (int i = s1.getSize(), j = 0; i < str_ret.getSize(); i += 1, j += 1)
-    {
-        str_ret.CustomSetAt(i, s2.CustomGetAt(j));
-    }
-
-    s1.setString(str_ret);
-}
-
-void concatenate_flip(CustomString s1, CustomString& s2)
-{
-    CustomString str_ret(s1.getSize() + s2.getSize());
-
-    for (int i = 0; i < s1.getSize(); i += 1)
-    {
-        str_ret.CustomSetAt(i, s1.CustomGetAt(i));
-    }
-
-    for (int i = s1.getSize(), j = 0; i < str_ret.getSize(); i += 1, j += 1)
-    {
-        str_ret.CustomSetAt(i, s2.CustomGetAt(j));
-    }
-
-    s2.setString(str_ret);
-}
-
-void concatenate(CustomString& s1, const string s)
-{
-    CustomString s2(s);
-    CustomString str_ret(s1.getSize() + s2.getSize());
-
-    for (int i = 0; i < s1.getSize(); i += 1)
-    {
-        str_ret.CustomSetAt(i, s1.CustomGetAt(i));
-    }
-
-    for (int i = s1.getSize(), j = 0; i < str_ret.getSize(); i += 1, j += 1)
-    {
-        str_ret.CustomSetAt(i, s2.CustomGetAt(j));
-    }
-
-    s1.setString(str_ret);
-}
-
-void concatenate(string s, CustomString& s1)
-{
-    CustomString s2(s);
-    CustomString str_ret(s1.getSize() + s2.getSize());
-
-    for (int i = 0; i < s2.getSize(); i += 1)
-    {
-        str_ret.CustomSetAt(i, s2.CustomGetAt(i));
-    }
-
-    for (int i = s2.getSize(), j = 0; i < str_ret.getSize(); i += 1, j += 1)
-    {
-        str_ret.CustomSetAt(i, s1.CustomGetAt(j));
-    }
-
-    s1.setString(str_ret);
-}
-
-void concatenate(CustomString& s1, char s)
-{
-    CustomString s2;
-    s2.setString(s);
-    CustomString str_ret(s1.getSize() + s2.getSize());
-
-    for (int i = 0; i < s1.getSize(); i += 1)
-    {
-        str_ret.CustomSetAt(i, s1.CustomGetAt(i));
-    }
-
-    for (int i = s1.getSize(), j = 0; i < str_ret.getSize(); i += 1, j += 1)
-    {
-        str_ret.CustomSetAt(i, s2.CustomGetAt(j));
-    }
-
-    s1.setString(str_ret);
-}
-//-------------------------------------------------------------------
-template <typename T>
-struct Node
-{
-    // Try adding an index too
-    T value;
-    Node* next = NULL;
-    Node* prev = NULL;
-};
 
 //Doubly Linked List ------------------------------------------------
 template <typename T>
 class CustomList
 {
+    struct Node
+    {
+        // Try adding an index too
+        T value;
+        Node* next = NULL;
+        Node* prev = NULL;
+    };
+
     friend class BTree;
-    Node<T>* head = NULL;
+    Node* head = NULL;
     int capacity = 0;
 public:
 
@@ -511,12 +45,12 @@ public:
 
         if (head != NULL)
         {
-            Node<T>* temp = head;
+            Node* temp = head;
             while (temp->next != head)
             {
                 temp = temp->next;
             }
-            Node<T>* this_one = new Node<T>;
+            Node* this_one = new Node;
             this_one->value = val;
 
             temp->next = this_one;
@@ -526,7 +60,7 @@ public:
         }
         else
         {
-            head = new Node<T>;
+            head = new Node;
             head->value = val;
             head->next = head;
             head->prev = head;
@@ -536,7 +70,7 @@ public:
     }
 
     bool find(T val) {
-        Node<T>* temp = head;
+        Node* temp = head;
         while (temp) {
             if (temp->value == val) return 1;
             temp = temp->next;
@@ -546,11 +80,11 @@ public:
 
     void Remove(T val)
     {
-        Node<T>* ptr = head;
+        Node* ptr = head;
 
         if (ptr->value == val)
         {
-            Node<T>* temp = head;
+            Node* temp = head;
             head = head->next;
             temp->prev->next = head;
             head->prev = temp->prev;
@@ -563,7 +97,7 @@ public:
         {
             if (ptr->value == val)
             {
-                Node<T>* sav = ptr->prev;
+                Node* sav = ptr->prev;
                 ptr->prev->next = ptr->next;
                 ptr->next->prev = sav;
                 capacity -= 1;
@@ -576,7 +110,7 @@ public:
 
     bool search_it(int k)
     {
-        Node<T>* ptr = head;
+        Node* ptr = head;
         while (ptr->next != head)
         {
             if (ptr->value == k)
@@ -596,7 +130,7 @@ public:
             return;
         }
         int cap = capacity;
-        Node<T>* ptr = head;
+        Node* ptr = head;
         while (cap > 0)
         {
             if (ptr->value != -1)
@@ -620,7 +154,7 @@ public:
     T getElement(int inp)
     {
         int i = 0;
-        Node<T>* temp = head;
+        Node* temp = head;
 
         while (i != inp)
         {
@@ -632,9 +166,9 @@ public:
 
     void operator=(CustomList& copyFrom) {
         if (head) {
-            Node<T>* tempHead = head;
+            Node* tempHead = head;
             do {
-                Node<T>* tempNext = head->next;
+                Node* tempNext = head->next;
                 delete head;
                 head = tempNext;
             } while (head != tempHead);
@@ -642,7 +176,7 @@ public:
         }
         capacity = 0;
 
-        Node<T>* copyTempHead = copyFrom.head;
+        Node* copyTempHead = copyFrom.head;
         while (capacity < copyFrom.capacity) {
             this->insert_object(copyTempHead->value);
             copyTempHead = copyTempHead->next;
@@ -651,9 +185,9 @@ public:
 
     ~CustomList() {
         if (head) {
-            Node<T>* tempHead = head;
+            Node* tempHead = head;
             do {
-                Node<T>* tempNext = head->next;
+                Node* tempNext = head->next;
                 delete head;
                 head = tempNext;
             } while (head != tempHead);
@@ -1028,8 +562,6 @@ int customStoi(const char* str) {
     return isNegative ? -result : result;
 }
 
-
-
 CustomString extractColumn2(ColSelect& ColS, CustomString& str)
 {
     int index = 0;
@@ -1048,7 +580,6 @@ CustomString extractColumn2(ColSelect& ColS, CustomString& str)
 
     return column;
 }
-
 
 int hashString(CustomString& col)
 {
@@ -2977,7 +2508,7 @@ void BTree::BTreeNodeToFile(ofstream& thisFile, const BTreeNode& thisNode)
     // Write the rows corresponding to each key
     for (int i = 0; i < thisNode.nValues; ++i) {
         CustomList<CustomString>& rowList = thisNode.rows[i];
-        Node<CustomString>* current = rowList.head; // Assuming CustomList has a `getHead()` function
+        CustomList<CustomString>::Node* current = rowList.head; // Assuming CustomList has a `getHead()` function
 
         int ii = 0;
         while (current != nullptr)
