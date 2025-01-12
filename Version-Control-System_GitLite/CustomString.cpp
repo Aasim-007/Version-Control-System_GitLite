@@ -458,3 +458,36 @@ void concatenate(CustomString& s1, char s)
 
     s1.setString(str_ret);
 }
+
+CustomString Num2Str(int n)
+{
+    CustomString returner;
+    int k = n;
+    int count = 0;
+    while (k != 0)
+    {
+        k /= 10;
+        count += 1;
+    }
+    if (n == 0)count = 1;
+
+    for (int i = 0; i < count; i += 1)
+    {
+        CustomString helper((char)((n % 10) + 48));
+        concatenate_flip(helper, returner);
+        n /= 10;
+    }
+
+    return returner;
+}
+
+int Str2Num(CustomString n)
+{
+    int num = 0;
+    for (int i = 0, j = n.getSize() - 1; i < n.getSize(); i += 1, j -= 1)
+    {
+        num += (pow(10, i) * (n.CustomGetAt(j) - 48));
+    }
+
+    return num;
+}

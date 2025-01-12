@@ -1,4 +1,5 @@
-
+#pragma once
+#include <iostream>
 using namespace std;
 
 class CustomString
@@ -96,3 +97,6 @@ void concatenate(string s, CustomString& s1);
 void concatenate(CustomString& s1, char s);
 //-------------------------------------------------------------------
 
+CustomString Num2Str(int n);
+
+int Str2Num(CustomString n);
