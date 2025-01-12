@@ -1,9 +1,5 @@
-#include <iostream>
+
 using namespace std;
-
-#ifndef custom_string
-
-#define custom_string
 
 class CustomString
 {
@@ -100,5 +96,3 @@ void concatenate(string s, CustomString& s1);
 void concatenate(CustomString& s1, char s);
 //-------------------------------------------------------------------
 
-
-#endif // !custom_string

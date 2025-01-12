@@ -11,7 +11,6 @@
 #include <ctime>
 
 #include "CustomString.h"
-#include "CustomString.cpp"
 
 using namespace std;
 using namespace filesystem;
