@@ -131,14 +131,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CustomList.cpp" />
-    <ClCompile Include="CustomString.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Btree.h" />
+    <ClInclude Include="AVLTree.h" />
+    <ClInclude Include="BTree.h" />
+    <ClInclude Include="CommitFunctionalities.h" />
     <ClInclude Include="CustomList.h" />
     <ClInclude Include="CustomString.h" />
+    <ClInclude Include="HelpingFunctions.h" />
+    <ClInclude Include="Merkle.h" />
+    <ClInclude Include="ParentTree.h" />
+    <ClInclude Include="RedBlackTree.h" />
+    <ClInclude Include="Stack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
