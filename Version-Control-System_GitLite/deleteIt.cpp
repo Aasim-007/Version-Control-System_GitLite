@@ -1,1 +1,0 @@
-//delete kar dena is ko
